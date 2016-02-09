@@ -40,10 +40,13 @@ func maybeAddOrigin(main string) {
 	}
 }
 
-func maybeAddPushUrls(mirrors []string) {
+func maybeAddPushUrls(main string, mirrors []string) {
 	pushUrls := gitconfig.GetPushURL()
 
-	for _, mirror := range mirrors {
+	things := []string{main}
+	things = append(things, mirrors...)
+
+	for _, mirror := range things {
 		if !inArray(pushUrls, mirror) {
 			err := gitconfig.AddPushURL(mirror)
 			if err != nil {
@@ -71,7 +74,7 @@ func main() {
 	}
 
 	maybeAddOrigin(conf.Main)
-	maybeAddPushUrls(conf.Mirrors)
+	maybeAddPushUrls(conf.Main, conf.Mirrors)
 
 	fmt.Println("Done!")
 }
