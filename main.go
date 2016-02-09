@@ -3,34 +3,58 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
-	"os/exec"
-	"os/user"
 	"strings"
+
+	"gitlab.com/gitzytout/pkg/gitconfig"
 
 	"github.com/ghodss/yaml"
 )
 
+// Config represents the yaml content
 type Config struct {
 	Main    string   `json:"main"`
 	Mirrors []string `json:"mirrors"`
 }
 
 func (c Config) String() string {
-	return strings.Join(c.Mirrors, ", ")
+	return c.Main + "; " + strings.Join(c.Mirrors, ", ")
 }
 
-func GetUserDir() string {
-	usr, err := user.Current()
-	if err != nil {
-		fmt.Println("!! Can't get current user", err)
-		return ""
+func inArray(array []string, value string) bool {
+	for _, v := range array {
+		if strings.Compare(value, v) == 0 {
+			return true
+		}
 	}
+	return false
+}
 
-	return usr.HomeDir
+func maybeAddOrigin(main string) {
+	remoteURL := gitconfig.GetRemoteOrigin()
+
+	if strings.Compare(main, remoteURL) != 0 {
+		errMain := gitconfig.AddOrigin(main)
+		if errMain != nil {
+			fmt.Println("Error while adding origin: "+main, errMain.Error())
+		}
+	}
+}
+
+func maybeAddPushUrls(mirrors []string) {
+	pushUrls := gitconfig.GetPushURL()
+
+	for _, mirror := range mirrors {
+		if !inArray(pushUrls, mirror) {
+			err := gitconfig.AddPushURL(mirror)
+			if err != nil {
+				fmt.Println("Error while adding push url: `"+mirror, err.Error())
+			}
+		}
+	}
 }
 
 func main() {
-	fmt.Println("  gitzytout\n  =========")
+	fmt.Println("gitzytout\n=========")
 
 	const configPath string = "gitzytout.yaml"
 
@@ -46,16 +70,8 @@ func main() {
 		fmt.Println("Can't decode yaml !")
 	}
 
-	fmt.Println(conf)
+	maybeAddOrigin(conf.Main)
+	maybeAddPushUrls(conf.Mirrors)
 
-	// git remote set-url origin --push --add git@gitlab.com:SiegfriedEhret/test.git
-	// git remote set-url origin --push --add git@github.com:SiegfriedEhret/test.git
-
-	for _, mirror := range conf.Mirrors {
-		cmd := exec.Command("git", "remote", "set-url", "origin", "--push", "--add", mirror)
-		err := cmd.Run()
-		if err != nil {
-			fmt.Println("Error while running `" + strings.Join(cmd.Args, " ") + "`")
-		}
-	}
+	fmt.Println("Done!")
 }
