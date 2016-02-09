@@ -7,9 +7,9 @@ A very small thing that reads a yaml config file and pushes to the given git rep
 
 Made to solve the problem of having your code centralized only on Github or Gitlab...
 
-It is made in [Go](https://golang.org) because [Vincent](https://github.com/vbehar) thinks this language is awesome.
+It is made in [Go](https://golang.org) because [Vincent](https://github.com/vbehar) thinks this language is awesome (and yes, it is basically 2 commands in your shell).
 
-## how to
+## how to
 
 First, create a `gitzytout.yaml` file, with some content:
 
