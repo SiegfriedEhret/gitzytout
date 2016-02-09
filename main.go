@@ -53,8 +53,7 @@ func main() {
 
 	for _, mirror := range conf.Mirrors {
 		cmd := exec.Command("git", "remote", "set-url", "origin", "--push", "--add", mirror)
-		fmt.Println(cmd)
-		err = cmd.Run()
+		err := cmd.Run()
 		if err != nil {
 			fmt.Println("Error while running `" + strings.Join(cmd.Args, " ") + "`")
 		}
