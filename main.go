@@ -5,7 +5,7 @@ import (
 	"io/ioutil"
 	"strings"
 
-	"gitlab.com/gitzytout/pkg/gitconfig"
+	"gitlab.com/SiegfriedEhret/gitzytout/pkg/gitconfig"
 
 	"github.com/ghodss/yaml"
 )
