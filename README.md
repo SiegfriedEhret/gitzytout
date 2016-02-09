@@ -7,6 +7,11 @@ A very small thing that reads a yaml config file and pushes to the given git rep
 
 Made to solve the problem of having your code centralized only on Github or Gitlab...
 
+Thanks to **gitzytout**, the source code is available at:
+
+- https://gitlab.com/SiegfriedEhret/gitzytout
+- https://github.com/SiegfriedEhret/gitzytout
+
 It is made in [Go](https://golang.org) because [Vincent](https://github.com/vbehar) thinks this language is awesome (and yes, it is basically 2 commands in your shell).
 
 ## how to
