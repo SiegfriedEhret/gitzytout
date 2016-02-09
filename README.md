@@ -7,21 +7,25 @@ A very small thing that reads a yaml config file and pushes to the given git rep
 
 Made to solve the problem of having your code centralized only on Github or Gitlab...
 
-## how to
+It is made in [Go](https://golang.org) because [Vincent](https://github.com/vbehar) thinks this language is awesome (and yes, it is basically 2 commands in your shell).
+
+## how to
 
 First, create a `gitzytout.yaml` file, with some content:
 
-```
+```yaml
+main: git@gitlab.com:SiegfriedEhret/gitzytout.git
 mirrors:
-- https://gitlab.com/SiegfriedEhret/gitzytout
-- https://github.com/SiegfriedEhret/gitzytout
+- git@github.com:SiegfriedEhret/gitzytout.git
 ```
+
+Then, run `gitzytout` it will automagically configure your `.git/config` to allow you to push to multiple repositories.
 
 ## todo
 
 - [ ] Check with https/ssl urls
-- [ ] Check with passphrase keys
-- [ ] [Add a main item](https://gitlab.com/SiegfriedEhret/gitzytout/issues/1) ?
+- [x] Check with passphrase keys
+- [x] [Add a main item](https://gitlab.com/SiegfriedEhret/gitzytout/issues/1) ?
 
 ## licence
 
