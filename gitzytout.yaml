@@ -1,3 +1,3 @@
-main: git@gitlab.com:SiegfriedEhret/test.git
+main: git@gitlab.com:SiegfriedEhret/gitzytout.git
 mirrors:
-- git@github.com:SiegfriedEhret/test.git
+- git@github.com:SiegfriedEhret/gitzytout.git
