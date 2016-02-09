@@ -11,6 +11,8 @@ It is made in [Go](https://golang.org) because [Vincent](https://github.com/vbeh
 
 ## how to
 
+Install using `go get -u gitlab.com/SiegfriedEhret/gitzytout`.
+
 First, create a `gitzytout.yaml` file, with some content:
 
 ```yaml
