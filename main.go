@@ -3,11 +3,16 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
+	"log"
 	"strings"
 
 	"gitlab.com/SiegfriedEhret/gitzytout/pkg/gitconfig"
 
 	"github.com/ghodss/yaml"
+)
+
+const (
+	configPath string = "gitzytout.yaml"
 )
 
 // Config represents the yaml content
@@ -29,52 +34,61 @@ func inArray(array []string, value string) bool {
 	return false
 }
 
-func maybeAddOrigin(main string) {
+func maybeAddOrigin(main string) (err error) {
 	remoteURL := gitconfig.GetRemoteOrigin()
 
 	if strings.Compare(main, remoteURL) != 0 {
-		errMain := gitconfig.AddOrigin(main)
-		if errMain != nil {
-			fmt.Println("Error while adding origin: "+main, errMain.Error())
+		if err := gitconfig.AddOrigin(main); err != nil {
+			fmt.Println("Error while adding origin: "+main, err.Error())
 		}
 	}
+
+	return
 }
 
-func maybeAddPushUrls(main string, mirrors []string) {
+func maybeAddPushUrls(main string, mirrors []string) (errors []error) {
 	pushUrls := gitconfig.GetPushURL()
-
 	things := []string{main}
 	things = append(things, mirrors...)
 
 	for _, mirror := range things {
 		if !inArray(pushUrls, mirror) {
-			err := gitconfig.AddPushURL(mirror)
-			if err != nil {
-				fmt.Println("Error while adding push url: `"+mirror, err.Error())
+			if err := gitconfig.AddPushURL(mirror); err != nil {
+				errors = append(errors, err)
 			}
 		}
 	}
+
+	return
 }
 
 func main() {
 	fmt.Println("gitzytout\n=========")
 
-	const configPath string = "gitzytout.yaml"
-
 	data, err := ioutil.ReadFile(configPath)
 	if err != nil {
-		fmt.Printf("Can't read config %s", configPath)
+		log.Fatal("Can't read config " + configPath)
 	}
 
 	var conf Config
 	unmarshalErr := yaml.Unmarshal(data, &conf)
 
 	if unmarshalErr != nil {
-		fmt.Println("Can't decode yaml !")
+		log.Fatal("Can't decode yaml !")
 	}
 
-	maybeAddOrigin(conf.Main)
-	maybeAddPushUrls(conf.Main, conf.Mirrors)
+	errMain := maybeAddOrigin(conf.Main)
+	errMirrors := maybeAddPushUrls(conf.Main, conf.Mirrors)
+
+	if errMain != nil {
+		log.Println("Failed to set up the main repository", conf.Main)
+	}
+
+	if len(errMirrors) > 0 {
+		for i := 0; i < len(errMirrors); i++ {
+			log.Println("Failed to write push url: ", errMirrors[i])
+		}
+	}
 
 	fmt.Println("Done!")
 }

@@ -30,7 +30,7 @@ Then, run `gitzytout` it will automagically configure your `.git/config` to allo
 
 ## todo
 
-- [ ] Check with https/ssl urls
+- [x] Check with https/ssl urls
 - [x] Check with passphrase keys
 - [x] [Add a main item](https://gitlab.com/SiegfriedEhret/gitzytout/issues/1) ?
 

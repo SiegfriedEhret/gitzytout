@@ -37,7 +37,7 @@ func GetPushURL() []string {
 		fmt.Println("Something weird happend while reading available git push urls: ", err.Error(), "\nOutput is: ", output)
 	}
 
-	stringOutput := string(output[:])
+	stringOutput := string(output)
 	stringArray := strings.Split(stringOutput, "\n")
 
 	return stringArray
